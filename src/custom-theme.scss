@@ -42,7 +42,6 @@ $light-theme: mat.define-theme((
   .mat-toolbar-row, .mat-toolbar-single-row {
     padding: 0 64px;
   }
-
   .mat-mdc-form-field-icon-prefix>.mat-icon, .mat-mdc-form-field-icon-suffix>.mat-icon {
     padding: 0 6px 0 12px;
   }
@@ -53,6 +52,9 @@ $light-theme: mat.define-theme((
   --mat-toolbar-container-background-color: #fafafccc;
   .mat-toolbar-row, .mat-toolbar-single-row {
     padding: 0 64px;
+  }
+  .mat-mdc-form-field-icon-prefix>.mat-icon, .mat-mdc-form-field-icon-suffix>.mat-icon {
+    padding: 0 6px 0 12px;
   }
 }
 

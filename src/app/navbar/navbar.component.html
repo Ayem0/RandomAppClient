@@ -1,0 +1,19 @@
+<div class="fixed top-0 right-0 left-0">
+    <mat-toolbar>
+        <!-- NavigationMenu -->
+        <app-navigation-menu></app-navigation-menu>
+        <!-- TODO a remplacer par img -->
+        <a [routerLink]="['/home']"><h1 class="blue-text-color p-4">RandomApp</h1></a>
+        <!-- spacer -->
+        <div class="flex-1"></div>
+        <!-- SettingsMenu -->
+        <app-settings-menu></app-settings-menu>
+        <!-- MessageMenu -->
+        <app-message-menu></app-message-menu>
+        <!-- NotificationMenu -->
+        <app-notification-menu></app-notification-menu>
+        <!-- AccountMenu -->
+        <app-account-menu></app-account-menu>
+    </mat-toolbar>
+    <mat-divider></mat-divider>
+</div>
