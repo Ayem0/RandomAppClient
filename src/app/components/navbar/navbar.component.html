@@ -1,7 +1,42 @@
-<nav class="flex items-center justify-center p-4 border-b border-gray-500">
-    <div class="inline-flex gap-2">
-        <a [routerLink]="['/home']" [routerLinkActive]="['bg-black']" class="p-2 rounded-lg hover:bg-gray-600 hover:underline ease-in duration-100 underline-offset-4">Home</a>
-        <a [routerLink]="['/login']" [routerLinkActive]="['bg-black']" class="p-2 rounded-lg hover:bg-gray-600 hover:underline ease-in duration-100 underline-offset-4">Login</a>
-        <a [routerLink]="['/register']" [routerLinkActive]="['bg-black']" class="p-2 rounded-lg hover:bg-gray-600 hovere:ease-in:underline ease-in duration-300 underline-offset-4">Register</a>
-    </div>
-</nav>
+<div class="fixed top-0 right-0 left-0">
+    <mat-toolbar>
+        <!-- TODO en faire un routing component -->
+        <button mat-icon-button [matMenuTriggerFor]="menu"><mat-icon>menu</mat-icon></button>
+        <mat-menu #menu="matMenu">
+            <a [routerLink]="['/home']" [routerLinkActive]="['bg-black']"><button mat-menu-item><mat-icon>home</mat-icon>Home</button></a>
+            <a [routerLink]="['/login']" [routerLinkActive]="['bg-black']"><button mat-menu-item><mat-icon>login</mat-icon>Login</button></a>
+            <a [routerLink]="['/register']" [routerLinkActive]="['bg-black']"><button mat-menu-item><mat-icon>person_add</mat-icon>Register</button></a>
+        </mat-menu>
+        <!-- TODO a remplacer par img -->
+        <a [routerLink]="['/home']" [routerLinkActive]="['bg-black']"><h1 class="blue-text-color">RandomApp</h1></a>
+        <!-- spacer -->
+        <div class="flex-1"></div>
+        <!-- TODO en faire un settings component avec un theme component -->
+        <button mat-icon-button [matMenuTriggerFor]="settings"><mat-icon>more_vert</mat-icon></button>
+        <mat-menu #settings="matMenu"  xPosition="before">
+            <button mat-menu-item><mat-icon>settings</mat-icon>Settings</button>
+            <button mat-menu-item [matMenuTriggerFor]="theme"><mat-icon>contrast</mat-icon>Theme</button>
+            <mat-menu #theme="matMenu" yPosition="below">
+                <button mat-menu-item (click)="themeButtonOnClick('dark-theme')">
+                    <mat-icon>nightlight</mat-icon>Dark
+                </button>
+                <button mat-menu-item (click)="themeButtonOnClick('light-theme')">
+                    <mat-icon>light_mode</mat-icon>Light
+                </button> 
+            </mat-menu>
+        </mat-menu>
+        <!-- TODO en faire un messages notifications component -->
+        <button mat-icon-button matTooltip="Messages"><mat-icon matBadge="1" matBadgeSize="large" aria-hidden="false">forum</mat-icon></button>
+        <!-- TODO en faire un notifications component -->
+        <button mat-icon-button matTooltip="Notifications"><mat-icon matBadge="1" matBadgeSize="large" aria-hidden="false">notifications</mat-icon></button>
+        <!-- TODO en faire un account component -->
+        <button mat-icon-button [matMenuTriggerFor]="account"><mat-icon>account_circle</mat-icon></button>
+        <mat-menu #account="matMenu" xPosition="before">
+            <button mat-menu-item><mat-icon>person</mat-icon>Profile</button>
+            <button mat-menu-item><mat-icon>manage_accounts</mat-icon>Manage Account</button>
+            <mat-divider></mat-divider>
+            <button mat-menu-item><mat-icon>logout</mat-icon>Logout</button>
+        </mat-menu>
+    </mat-toolbar>
+    <mat-divider></mat-divider>
+</div>

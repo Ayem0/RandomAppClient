@@ -3,9 +3,10 @@ import { LoginComponent } from './authentication/components/login/login.componen
 import { RegisterComponent } from './authentication/components/register/register.component';
 import { PageNotFoundComponent } from './components/page-not-found/page-not-found.component';
 import { HomeComponent } from './components/home/home.component';
+import { authGuard } from './authentication/auth.guard';
 
 export const routes: Routes = [
-    { path: "home", component: HomeComponent, title: "Home" },
+    { path: "home", component: HomeComponent, title: "Home", canActivate: [authGuard]},
     { path: "login", component: LoginComponent, title: "Login"},
     { path: "register", component: RegisterComponent, title: "Register" },
     { path: "", redirectTo: "/home", pathMatch: "full" },

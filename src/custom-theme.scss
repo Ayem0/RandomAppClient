@@ -10,22 +10,50 @@
 @include mat.core();
 
 // Define the theme object.
-$RandomAppClient-theme: mat.define-theme((
+$dark-theme: mat.define-theme((
   color: (
     theme-type: dark,
     primary: mat.$azure-palette,
     tertiary: mat.$blue-palette,
   ),
   density: (
-    scale: 0,
+    scale: -1,
+  )
+));
+
+$light-theme: mat.define-theme((
+  color: (
+    theme-type: light,
+    primary: mat.$azure-palette,
+    tertiary: mat.$blue-palette,
+  ),
+  density: (
+    scale: -1,
   )
 ));
 
 // Include theme styles for core and each component used in your app.
 // Alternatively, you can import and @include the theme mixins for each component
 // that you are using.
-:root {
-  @include mat.all-component-themes($RandomAppClient-theme);
+
+.dark-theme {
+  @include mat.all-component-themes($dark-theme);
+  --mat-app-background-color: #0f0f0f;
+  .mat-toolbar-row, .mat-toolbar-single-row {
+    padding: 0 64px;
+  }
+
+  .mat-mdc-form-field-icon-prefix>.mat-icon, .mat-mdc-form-field-icon-suffix>.mat-icon {
+    padding: 0 6px 0 12px;
+  }
+}
+
+.light-theme {
+  @include  mat.all-component-themes($light-theme);
+  --mat-toolbar-container-background-color: #fafafccc;
+  .mat-toolbar-row, .mat-toolbar-single-row {
+    padding: 0 64px;
+  }
 }
 
 // Comment out the line below if you want to use the pre-defined typography utility classes.
