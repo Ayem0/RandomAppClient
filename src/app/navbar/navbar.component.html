@@ -8,12 +8,14 @@
         <div class="flex-1"></div>
         <!-- SettingsMenu -->
         <app-settings-menu></app-settings-menu>
-        <!-- MessageMenu -->
-        <app-message-menu></app-message-menu>
-        <!-- NotificationMenu -->
-        <app-notification-menu></app-notification-menu>
-        <!-- AccountMenu -->
-        <app-account-menu></app-account-menu>
+        @if (authService.isLoggedIn()) {
+            <!-- MessageMenu -->
+            <app-message-menu></app-message-menu>
+            <!-- NotificationMenu -->
+            <app-notification-menu></app-notification-menu>
+            <!-- AccountMenu -->
+            <app-account-menu></app-account-menu>
+        }
     </mat-toolbar>
     <mat-divider></mat-divider>
 </div>

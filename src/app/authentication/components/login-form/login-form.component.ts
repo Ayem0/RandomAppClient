@@ -27,6 +27,8 @@ export class LoginFormComponent {
   private router = inject(Router)
   private authService = inject(AuthService);
 
+  hide = signal(true);
+
   email =  new FormControl('', [Validators.required, Validators.email]);
   password = new FormControl('', [Validators.required, Validators.minLength(10), Validators.maxLength(30)]);
 
@@ -35,19 +37,18 @@ export class LoginFormComponent {
     password:  this.password,
   });
 
-  hide = signal(true);
+  errorMessages: string[] = [];
 
-  clickEvent(event: MouseEvent) {
+
+
+  hidePassword(event: MouseEvent) {
     this.hide.set(!this.hide());
     event.stopPropagation();
   }
 
   public async onSubmit() {
     if(this.email.value && this.password.value){
-      this.authService.login({email: this.email.value, password: this.password.value })
-      if(this.authService.isloggedIn) {
-        this.router.navigateByUrl("/home");
-      }
+      this.authService.login({email: this.email.value, password: this.password.value });
     }
   }
 }

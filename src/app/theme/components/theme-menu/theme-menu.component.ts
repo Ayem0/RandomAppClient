@@ -1,8 +1,9 @@
-import { Component, inject, OnInit } from '@angular/core';
+import { Component, inject } from '@angular/core';
 import { MatButtonModule } from '@angular/material/button';
 import { MatIcon } from '@angular/material/icon';
 import { MatMenuModule } from '@angular/material/menu';
 import { ThemeService } from '../../../theme/theme.service';
+import { ThemeOptions } from '../../consts/theme-consts';
 
 @Component({
   selector: 'app-theme-menu',
@@ -15,20 +16,13 @@ import { ThemeService } from '../../../theme/theme.service';
   templateUrl: './theme-menu.component.html',
   styleUrl: './theme-menu.component.css'
 })
-export class ThemeMenuComponent implements OnInit {
-  themeService = inject(ThemeService);
+export class ThemeMenuComponent {
+  private themeService = inject(ThemeService);
 
-  lightTheme = "light-theme";
-  darkTheme = "dark-theme";
+  light = ThemeOptions.LIGHT;
+  dark = ThemeOptions.DARK;
 
-  currentTheme = "";
-
-  ngOnInit() {
-    this.currentTheme = this.themeService.currentTheme;
-  }
-
-  themeButtonOnClick(theme: string) {
-    this.themeService.setCurrenTheme(theme);
-    this.currentTheme = this.themeService.currentTheme;
+  themeButtonOnClick(themeOptions: ThemeOptions) {
+    this.themeService.setCurrenTheme(themeOptions);
   }
 }

@@ -20,7 +20,7 @@
             </mat-form-field>
             <mat-form-field appearance="outline" [hideRequiredMarker]="true">
                 <input matInput [type]="hide() ? 'password' : 'text'" [formControl]="password" placeholder="Password" autocomplete="current-password"/>
-                <button type="button" mat-icon-button matSuffix (click)="clickEvent($event)" [attr.aria-label]="'Hide password'" [attr.aria-pressed]="hide()">
+                <button type="button" mat-icon-button matSuffix (click)="hidePassword($event)" [attr.aria-label]="'Hide password'" [attr.aria-pressed]="hide()">
                     <mat-icon>{{hide() ? 'visibility_off' : 'visibility'}}</mat-icon>
                 </button>
                 @if (password.hasError('required')) {

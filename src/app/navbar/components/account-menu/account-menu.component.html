@@ -3,5 +3,5 @@
     <button mat-menu-item><mat-icon>person</mat-icon>Profile</button>
     <button mat-menu-item><mat-icon>manage_accounts</mat-icon>Manage Account</button>
     <mat-divider></mat-divider>
-    <button mat-menu-item><mat-icon>logout</mat-icon>Logout</button>
+    <button mat-menu-item (click)="signOut()"><mat-icon>logout</mat-icon>Logout</button>
 </mat-menu>

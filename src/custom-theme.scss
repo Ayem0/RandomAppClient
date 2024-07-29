@@ -36,9 +36,8 @@ $light-theme: mat.define-theme((
 // Alternatively, you can import and @include the theme mixins for each component
 // that you are using.
 
-.dark-theme {
+body {
   @include mat.all-component-themes($dark-theme);
-  --mat-app-background-color: #0f0f0f;
   .mat-toolbar-row, .mat-toolbar-single-row {
     padding: 0 64px;
   }
@@ -47,15 +46,13 @@ $light-theme: mat.define-theme((
   }
 }
 
-.light-theme {
-  @include  mat.all-component-themes($light-theme);
+.dark {
+  --mat-app-background-color: #0f0f0f;
+}
+
+.light {
+  @include  mat.all-component-colors($light-theme);
   --mat-toolbar-container-background-color: #fafafccc;
-  .mat-toolbar-row, .mat-toolbar-single-row {
-    padding: 0 64px;
-  }
-  .mat-mdc-form-field-icon-prefix>.mat-icon, .mat-mdc-form-field-icon-suffix>.mat-icon {
-    padding: 0 6px 0 12px;
-  }
 }
 
 // Comment out the line below if you want to use the pre-defined typography utility classes.

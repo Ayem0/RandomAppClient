@@ -1,4 +1,4 @@
-import { Component } from '@angular/core';
+import { Component, inject } from '@angular/core';
 import { MatDivider } from '@angular/material/divider';
 import { MatToolbar} from '@angular/material/toolbar';
 import { RouterLink } from '@angular/router';
@@ -7,6 +7,7 @@ import { NavigationMenuComponent } from './components/navigation-menu/navigation
 import { SettingsMenuComponent } from "./components/settings-menu/settings-menu.component";
 import { MessageMenuComponent } from '../messaging/components/message-menu/message-menu.component';
 import { NotificationMenuComponent } from '../notifications/components/notification-menu/notification-menu.component';
+import { AuthService } from '../authentication/auth.service';
 
 @Component({
   selector: 'app-navbar',
@@ -26,5 +27,5 @@ import { NotificationMenuComponent } from '../notifications/components/notificat
   styleUrl: './navbar.component.css'
 })
 export class NavbarComponent {
- 
+  authService = inject(AuthService);
 }

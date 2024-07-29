@@ -1,31 +1,34 @@
 import { Injectable } from '@angular/core';
+import { ThemeKey, ThemeOptions } from './consts/theme-consts';
 
 @Injectable({
   providedIn: 'root'
 })
 export class ThemeService {
 
-  currentTheme = "dark-theme";
+  private currentTheme!: ThemeOptions;
 
-  // TODO mettre le theme dans le localstorage et faire en sorte qu'a l'init de appcomponent cela load le theme ou si pas de theme le dark-theme
+  private themeKey = ThemeKey;
 
-  private loadTheme() {
+  public loadTheme() {
+    const theme = localStorage.getItem(this.themeKey);
+    if (theme && (theme === ThemeOptions.DARK || theme === ThemeOptions.LIGHT)) {
+      this.setCurrenTheme(theme);
+    } else {
+      this.setCurrenTheme(ThemeOptions.DARK);
+    }
     return;
   }
 
-
-  public setCurrenTheme(theme: string) {
+  public setCurrenTheme(theme: ThemeOptions) {
     const body = document.body;
-
-    if(theme === "dark-theme" && this.currentTheme === "light-theme") {
-      body.classList.remove("light-theme");
-      body.classList.add("dark-theme");
-      this.currentTheme = theme;
-    } else if(theme === "light-theme" && this.currentTheme === "dark-theme") {
-      body.classList.remove("dark-theme");
-      body.classList.add("light-theme");
-      this.currentTheme = "light-theme";
+    if(!body.classList.contains(theme)) {
+      const classToRemove = theme === ThemeOptions.DARK ? ThemeOptions.LIGHT : ThemeOptions.DARK;
+      body.classList.remove(classToRemove);
+      body.classList.add(theme);
     }
+    this.currentTheme = theme;
+    localStorage.setItem(this.themeKey, this.currentTheme);
     return;
   }
 }
