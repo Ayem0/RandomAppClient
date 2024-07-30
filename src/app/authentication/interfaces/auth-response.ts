@@ -4,6 +4,7 @@ export interface RegisterResponse {
 }
 
 export interface LoginResponse {
+    isSuccess: boolean,
     accessToken: string,
     refreshToken: string,
     errors: string[]

@@ -6,6 +6,11 @@
         </div>
     </mat-card-header>
     <mat-card-content>
+        @if (errorMessages) {
+            @for (error of errorMessages; track $index) {
+                <div>{{ error }}</div>
+            }
+        }
         <!-- LoginForm component -->
         <form [formGroup]="form" (ngSubmit)="onSubmit()" class="flex flex-col pb-4 gap-1">
             <mat-form-field appearance="outline" [hideRequiredMarker]="true">
@@ -33,7 +38,13 @@
                     <mat-error>Password must be max 30 characters</mat-error>
                 }
             </mat-form-field>
-            <button type="submit" [disabled]="!form.valid" mat-raised-button>Login</button>
+            <button type="submit" [disabled]="!form.valid" mat-raised-button>
+                @if (isLoading) {
+                    <mat-spinner></mat-spinner>
+                } @else {
+                    Login
+                }
+            </button>
         </form>
         <div class="flex justify-between items-center">
             <a [routerLink]="['/register']" class="hover:underline hover:text-blue-200 text-sm p-2">Don't have an account ?</a>

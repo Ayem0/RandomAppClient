@@ -4,6 +4,7 @@ import { ConfirmEmailResponse, LoginResponse, RegisterResponse } from './interfa
 import { ConfirmEmailRequest, LoginRequest, RegisterRequest} from './interfaces/auth-request';
 import { AccessTokenKey, RefreshTokenKey } from './consts/auth-const';
 import { Router } from '@angular/router';
+import { catchError, map, Observable, of } from 'rxjs';
 
 @Injectable({
   providedIn: 'root'
@@ -18,8 +19,35 @@ export class AuthService {
 
   private username = "";
   private userEmail = "";
+  private accessTokenKey = AccessTokenKey;
+  private refreshTokenKey = RefreshTokenKey;
 
 
+
+  /** FONCTION POUR SE CONNECTER */
+  public login(loginRequest: LoginRequest): Observable<Partial<LoginResponse>> {
+    return this.http.post<LoginResponse>(`${this.authUrl}/Login`, loginRequest, { observe: 'response' }).pipe(
+      map((res: HttpResponse<Partial<LoginResponse>>) => {
+        if (res.status === 200 && res.body && res.body.accessToken && res.body.refreshToken) {
+          this.userEmail = loginRequest.email;
+          this.isAuthenticated = true;
+          localStorage.setItem(this.accessTokenKey, res.body.accessToken);
+          localStorage.setItem(this.refreshTokenKey, res.body.refreshToken);
+          this.router.navigateByUrl('/home');
+          return { success: true };
+        } else {
+          return { success: false, errors: res.body?.errors || ['Unknown error occurred'] };
+        }
+      }),
+      catchError((error) => {
+        let errorMsg = 'Login failed. Please try again.';
+        if (error.error && error.error.errors) {
+          errorMsg = error.error.errors;
+        }
+        return of({ success: false, errors: [errorMsg] });
+      })
+    );
+  }
 
   // TODO A changer
   public register(registerRequest: RegisterRequest) {
@@ -39,24 +67,7 @@ export class AuthService {
     return this.http.post<ConfirmEmailResponse>(`${this.authUrl}/ResendConfirmEmail`, confirmEmailRequest, {observe: "response"});
   }
 
-  public login(loginRequest: LoginRequest) {
-    this.http.post<LoginResponse>(`${this.authUrl}/Login`, loginRequest, {observe: "response"}).subscribe((res: HttpResponse<Partial<LoginResponse>>) => {
-      if ( res.status == 200 && res.body && res.body.accessToken && res.body.refreshToken) {
-        this.userEmail = loginRequest.email;
-        this.isAuthenticated = true;
-        localStorage.setItem(AccessTokenKey, res.body.accessToken);
-        localStorage.setItem(RefreshTokenKey, res.body.refreshToken);
-        this.router.navigateByUrl("/home");
-        return;
-      } else {
-        console.log(res.status, res.body);
-        return;
-      }
-    });
-    return;
-  }
-
-
+  /** Fonction pour se deconnecter */
   public signOut() {
     localStorage.removeItem(AccessTokenKey);
     localStorage.removeItem(RefreshTokenKey);
@@ -66,6 +77,7 @@ export class AuthService {
     this.router.navigateByUrl("/login");
   }
 
+  /** Fonction pour savoir si l'utilisateur est connecté */
   public isLoggedIn() {
     return this.isAuthenticated;
   }

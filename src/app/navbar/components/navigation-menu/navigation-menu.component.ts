@@ -1,8 +1,9 @@
-import { Component } from '@angular/core';
+import { Component, inject } from '@angular/core';
 import { MatButtonModule } from '@angular/material/button';
 import { MatIcon } from '@angular/material/icon';
 import { MatMenuModule } from '@angular/material/menu';
 import { RouterLink } from '@angular/router';
+import { AuthService } from '../../../authentication/auth.service';
 
 @Component({
   selector: 'app-navigation-menu',
@@ -17,5 +18,5 @@ import { RouterLink } from '@angular/router';
   styleUrl: './navigation-menu.component.css'
 })
 export class NavigationMenuComponent {
-
+  authService = inject(AuthService);
 }
