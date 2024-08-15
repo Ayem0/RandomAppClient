@@ -1,7 +1,7 @@
 <button mat-icon-button [matMenuTriggerFor]="menu"><mat-icon>menu</mat-icon></button>
 <mat-menu #menu="matMenu">
     <a [routerLink]="['/home']"><button mat-menu-item><mat-icon>home</mat-icon>Home</button></a>
-    @if(isLoggedIn() === false) {
+    @if(!isLoggedIn) {
         <a [routerLink]="['/login']"><button mat-menu-item><mat-icon>login</mat-icon>Login</button></a>
         <a [routerLink]="['/register']"><button mat-menu-item><mat-icon>person_add</mat-icon>Register</button></a>
     }

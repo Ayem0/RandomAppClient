@@ -1,6 +1,6 @@
 import { HttpClient, HttpErrorResponse, HttpResponse } from '@angular/common/http';
-import { inject, Injectable, signal } from '@angular/core';
-import { catchError, firstValueFrom, map, Observable, of } from 'rxjs';
+import { inject, Injectable } from '@angular/core';
+import { BehaviorSubject, catchError, map, Observable, of } from 'rxjs';
 import { AccessTokenKey, RefreshTokenKey } from '../consts/auth-const';
 import { LoginRequest, RegisterRequest, ConfirmEmailRequest, RefreshRequest } from '../interfaces/auth-request';
 import { LoginResponse, RegisterResponse, ConfirmEmailResponse, RefreshResponse, Response } from '../interfaces/auth-response';
@@ -15,8 +15,8 @@ export class AuthService {
   private readonly accessTokenKey = AccessTokenKey;
   private readonly refreshTokenKey = RefreshTokenKey;
 
-  private isLoggedIn = signal(false);
-  public $isLoggedIn = this.isLoggedIn.asReadonly();
+  private authSubject = new BehaviorSubject<boolean>(false);
+  public isAuthenticated$ = this.authSubject.asObservable();
 
   /** Requete pour se connecter, si la connexion a fonctionné return true sinon return false et les erreurs */
   public login(loginRequest: LoginRequest): Observable<Partial<Response>> {
@@ -25,15 +25,16 @@ export class AuthService {
         if (res.status === 200 && res.body && res.body.accessToken && res.body.refreshToken) {
           this.setAccessToken(res.body.accessToken);
           this.setRefreshToken(res.body.refreshToken);
-          this.isLoggedIn.set(true);
+          // this.isLoggedIn.set(true);
+          this.authSubject.next(true);
           return { isSuccess: true };
         } else {
-          this.isLoggedIn.set(false);
+          // this.isLoggedIn.set(false);
           return { isSuccess: false, errors: res.body && res.body.errors ? res.body.errors : ['Unknown error occurred'] };
         }
       }),
       catchError((err: HttpErrorResponse) => {
-        this.isLoggedIn.set(false);
+        // this.isLoggedIn.set(false);
         return of({ isSuccess: false, errors: err.error.errors ? err.error.errors : ['Unknown error occurred']});
       })
     );
@@ -64,23 +65,24 @@ export class AuthService {
   public logout() {
     localStorage.removeItem(AccessTokenKey);
     localStorage.removeItem(RefreshTokenKey);
-    this.isLoggedIn.set(false);
+    // this.isLoggedIn.set(false);
+    this.authSubject.next(false);
   }
 
   /** Refresh les tokens avec le refreshtoken */
-  public refresh(refreshRequest: RefreshRequest): Observable<Partial<RefreshResponse>> {
+  public refresh(refreshRequest: RefreshRequest): Observable<boolean> {
     return this.http.post<RefreshResponse>(`${this.authUrl}/Refresh`, refreshRequest, { observe: 'response' }).pipe(
       map((res: HttpResponse<Partial<RefreshResponse>>) => {
         if (res.status === 200 && res.body && res.body.accessToken && res.body.refreshToken) {
           this.setAccessToken(res.body.accessToken);
           this.setRefreshToken(res.body.refreshToken);
-          return { isSuccess: true };
+          return true;
         } else {
-          return { isSuccess: false, errors: res.body && res.body.errors ? res.body.errors : ['Unknown error occurred'] };
+          return false;
         }
       }),
-      catchError((err: HttpErrorResponse) => {
-        return of({ isSuccess: false, errors: err.error.errors ? err.error.errors : ['Unknown error occurred']});
+      catchError(() => {
+        return of(false);
       })
     );
   }
@@ -113,19 +115,23 @@ export class AuthService {
   }
 
   /** Tente de récupérer le refreshToken, tente de refresh(), si succes set isAuthenticated to true */ 
-  public async loadUser(): Promise<void> {
+  public loadUser(): void {
     const refreshToken = this.getRefreshToken();
     const accessToken = this.getAccessToken();
-  
+    
     if (!refreshToken || !accessToken) {
       this.logout();
+      console.log("pas de refreshtoken ou de accesstoken");
     } else {
-      const res = await firstValueFrom(this.refresh({ refreshToken: refreshToken }));
-      if ( res.isSuccess && res.isSuccess === true) {
-        this.isLoggedIn.set(true);
-      } else {
-        this.logout();
-      }
+      this.refresh({refreshToken}).subscribe( res => {
+        if (res) {
+          this.authSubject.next(true);
+          console.log("refresh fonctionne");
+        } else {
+          this.logout();
+          console.log("refresh probleme");
+        }
+      })
     }
   }
 }

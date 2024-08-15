@@ -1,4 +1,4 @@
-import { Component, inject } from '@angular/core';
+import { Component, inject, OnInit } from '@angular/core';
 import { MatButtonModule } from '@angular/material/button';
 import { MatIcon } from '@angular/material/icon';
 import { MatMenuModule } from '@angular/material/menu';
@@ -19,9 +19,12 @@ import { AsyncPipe } from '@angular/common';
   templateUrl: './navigation-menu.component.html',
   styleUrl: './navigation-menu.component.css'
 })
-export class NavigationMenuComponent {
+export class NavigationMenuComponent implements OnInit {
   private readonly authService = inject(AuthService);
 
-  public isLoggedIn = this.authService.$isLoggedIn;
+  public isLoggedIn = false;
 
+  ngOnInit(): void {
+    this.authService.isAuthenticated$.subscribe( v => this.isLoggedIn = v);
+  }
 }

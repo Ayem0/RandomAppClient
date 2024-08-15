@@ -17,13 +17,14 @@ import { AuthService } from './authentication/services/auth.service';
 export class AppComponent implements OnInit {
   title = "RandomApp";
 
-  private themeService = inject(ThemeService);
-  private authService = inject(AuthService);
+  private readonly themeService = inject(ThemeService);
+  private readonly authService = inject(AuthService);
 
-  async ngOnInit() {
+
+  ngOnInit() {
     console.log("Initializing application...");
-    await this.authService.loadUser();
     this.themeService.loadTheme();
+    this.authService.loadUser();
   }
 }
 
