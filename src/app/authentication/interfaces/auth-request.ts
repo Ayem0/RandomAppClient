@@ -13,3 +13,7 @@ export interface RegisterRequest {
 export interface ConfirmEmailRequest {
     email: string,
 }
+
+export interface RefreshRequest {
+    refreshToken: string,
+}

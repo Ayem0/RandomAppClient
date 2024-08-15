@@ -4,4 +4,4 @@ export enum ThemeOptions {
 }
 
 
-export const ThemeKey = "THEME";
+export const ThemeKey = "theme";

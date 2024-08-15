@@ -8,7 +8,7 @@
         <div class="flex-1"></div>
         <!-- SettingsMenu -->
         <app-settings-menu></app-settings-menu>
-        @if (authService.isLoggedIn()) {
+        @if (isLoggedIn()) {
             <!-- MessageMenu -->
             <app-message-menu></app-message-menu>
             <!-- NotificationMenu -->

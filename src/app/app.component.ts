@@ -2,6 +2,7 @@ import { Component, inject, OnInit } from '@angular/core';
 import { RouterOutlet } from '@angular/router';
 import { NavbarComponent } from './navbar/navbar.component';
 import { ThemeService } from './theme/theme.service';
+import { AuthService } from './authentication/services/auth.service';
 
 @Component({
   selector: 'app-root',
@@ -14,11 +15,14 @@ import { ThemeService } from './theme/theme.service';
   styleUrl: './app.component.css'
 })
 export class AppComponent implements OnInit {
-  title = 'RandomAppClient';
+  title = "RandomApp";
 
   private themeService = inject(ThemeService);
+  private authService = inject(AuthService);
 
-  ngOnInit() {
+  async ngOnInit() {
+    console.log("Initializing application...");
+    await this.authService.loadUser();
     this.themeService.loadTheme();
   }
 }

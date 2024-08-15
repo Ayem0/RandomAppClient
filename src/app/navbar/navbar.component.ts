@@ -7,7 +7,8 @@ import { NavigationMenuComponent } from './components/navigation-menu/navigation
 import { SettingsMenuComponent } from "./components/settings-menu/settings-menu.component";
 import { MessageMenuComponent } from '../messaging/components/message-menu/message-menu.component';
 import { NotificationMenuComponent } from '../notifications/components/notification-menu/notification-menu.component';
-import { AuthService } from '../authentication/auth.service';
+import { AuthService } from '../authentication/services/auth.service';
+import { AsyncPipe } from '@angular/common';
 
 @Component({
   selector: 'app-navbar',
@@ -21,11 +22,14 @@ import { AuthService } from '../authentication/auth.service';
     NavigationMenuComponent,
     SettingsMenuComponent,
     MessageMenuComponent,
-    NotificationMenuComponent
+    NotificationMenuComponent,
+    AsyncPipe
 ],
   templateUrl: './navbar.component.html',
   styleUrl: './navbar.component.css'
 })
 export class NavbarComponent {
-  authService = inject(AuthService);
+  private readonly authService = inject(AuthService);
+  public isLoggedIn = this.authService.$isLoggedIn;
+  
 }

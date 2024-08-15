@@ -1,16 +1,25 @@
-export interface RegisterResponse {
+export interface RegisterResponse extends ErrorResponse, Response {
     message: string,
-    errors: string[],
 }
 
-export interface LoginResponse {
-    isSuccess: boolean,
+export interface LoginResponse extends ErrorResponse, Response {
     accessToken: string,
     refreshToken: string,
-    errors: string[]
 }
 
-export interface ConfirmEmailResponse {
+export interface ConfirmEmailResponse extends ErrorResponse, Response {
     message: string,
-    errors: string[]
+}
+
+export interface RefreshResponse extends ErrorResponse, Response {
+    accessToken: string,
+    refreshToken: string,
+}
+
+export interface ErrorResponse {
+    errors?: string[]
+}
+
+export interface Response extends ErrorResponse {
+    isSuccess: boolean,
 }

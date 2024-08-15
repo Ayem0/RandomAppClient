@@ -7,6 +7,7 @@
     <mat-card-content>
         <form [formGroup]="form" (ngSubmit)="onSubmit()" class="flex flex-col gap-1 pb-4">
             <mat-form-field appearance="outline" [hideRequiredMarker]="true">
+                <mat-label>Username</mat-label>
                 <input [type]="'text'" matInput [formControl]="username" placeholder="Username" autocomplete="nickname"/>
                 <mat-icon matSuffix>person</mat-icon>
                 @if (username.hasError('minlength')) {
@@ -15,14 +16,15 @@
                 @else if (username.hasError('maxlength')) {
                     <mat-error>Must be max 30 characters</mat-error>
                 }
-                @else if (username.hasError("pattern")) {
-                    <mat-error>Can't contain special characters</mat-error>
-                }
                 @else if (username.hasError('required')) {   
                     <mat-error>Username is required</mat-error>   
                 }
+                @else if (username.hasError('onlyLettersOrNumbers')) {   
+                    <mat-error>Must contain only letters or numbers</mat-error>   
+                }
             </mat-form-field>
             <mat-form-field appearance="outline" [hideRequiredMarker]="true">
+                <mat-label>Email</mat-label>
                 <input [type]="'email'" matInput [formControl]="email" placeholder="Email" autocomplete="email"/>
                 <mat-icon matSuffix>email</mat-icon>
                 @if (email.hasError('email')) {
@@ -33,8 +35,9 @@
                 }
             </mat-form-field>
             <mat-form-field appearance="outline" [hideRequiredMarker]="true">
+                <mat-label>Password</mat-label>
                 <input matInput [type]="hide() ? 'password' : 'text'" [formControl]="password" placeholder="Password" autocomplete="current-password"/>
-                <button type="button" mat-icon-button matSuffix (click)="clickEvent($event)" [attr.aria-label]="'Hide password'" [attr.aria-pressed]="hide()">
+                <button type="button" mat-icon-button matSuffix (click)="togglePassword($event)" [attr.aria-label]="'Hide password'" [attr.aria-pressed]="hide()">
                     <mat-icon>{{hide() ? 'visibility_off' : 'visibility'}}</mat-icon>
                 </button>
                 @if (password.hasError('required')) {
@@ -43,26 +46,69 @@
                 @else if (password.hasError('minlength')) {
                     <mat-error>Must be at least 10 characters</mat-error>
                 }
-                @else if (password.hasError('maxlength')) {
-                    <mat-error>Must be max 30 characters</mat-error>
+                @else if (password.hasError("hasSpace")) {
+                    <mat-error>Must not contain spaces</mat-error>
+                }
+                @else if (password.hasError("hasLower")) {
+                    <mat-error>Must contain a lowercase letter</mat-error>
+                }
+                @else if (password.hasError("hasUpper")) {
+                    <mat-error>Must contain an uppercase letter</mat-error>
+                }
+                @else if (password.hasError("hasNumber")) {
+                    <mat-error>Must contain a number</mat-error>
+                }
+                @else if (password.hasError("notOnlyLettersOrNumbers")) {
+                    <mat-error>Must contain a special character</mat-error>
+                }
+                @else if (password.hasError("maxlength")) {
+                    <mat-error>Must be max 100 characters</mat-error>
                 }
             </mat-form-field>
             <mat-form-field appearance="outline" [hideRequiredMarker]="true">
+                <mat-label>Confirm Password</mat-label>
                 <input matInput [type]="hide() ? 'password' : 'text'" [formControl]="confirmPassword" placeholder="Confirm Password" autocomplete="current-password"/>
-                <button type="button" mat-icon-button matSuffix (click)="clickEvent($event)" [attr.aria-label]="'Hide password'" [attr.aria-pressed]="hide()">
+                <button type="button" mat-icon-button matSuffix (click)="togglePassword($event)" [attr.aria-label]="'Hide password'" [attr.aria-pressed]="hide()">
                     <mat-icon>{{hide() ? 'visibility_off' : 'visibility'}}</mat-icon>
                 </button>
                 @if (confirmPassword.hasError('required')) {
-                    <mat-error>Confirm password is required</mat-error>
+                    <mat-error>Password is required</mat-error>
                 }
                 @else if (confirmPassword.hasError('minlength')) {
                     <mat-error>Must be at least 10 characters</mat-error>
                 }
+                @else if (confirmPassword.hasError("hasSpace")) {
+                    <mat-error>Must not contain spaces</mat-error>
+                }
+                @else if (confirmPassword.hasError('hasLower')) {
+                    <mat-error>Must contain a lowercase letter</mat-error>
+                }
+                @else if (confirmPassword.hasError('hasUpper')) {
+                    <mat-error>Must contain an uppercase letter</mat-error>
+                }
+                @else if (confirmPassword.hasError("hasNumber")) {
+                    <mat-error>Must contain a number</mat-error>
+                }
+                @else if (confirmPassword.hasError("notOnlyLettersOrNumbers")) {
+                    <mat-error>Must contain a special character</mat-error>
+                }
                 @else if (confirmPassword.hasError('maxlength')) {
-                    <mat-error>Must be max 30 characters</mat-error>
+                    <mat-error>Must be max 100 characters</mat-error>
+                }
+                @else if (form.hasError("passwordsMatch")) {
+                    <div class="absolute custom-error">
+                        <mat-error class="text-xs">Passwords do not match</mat-error>
+                    </div>
                 }
             </mat-form-field>
-            <button type="submit" [disabled]="!form.valid" mat-raised-button color="primary">Register</button>
+            
+            <button type="submit" [disabled]="!form.valid || isLoading" mat-raised-button>
+                @if (isLoading) {
+                    <mat-spinner diameter="20"></mat-spinner>
+                } @else {
+                    Register
+                }
+            </button>
         </form>
     </mat-card-content>
     <a [routerLink]="['/login']" class="p-2 hover:underline text-center text-sm hover:text-slate-400">Already have have an account ?</a>

@@ -8,7 +8,9 @@ body { margin: 0; font-family: Roboto, "Helvetica Neue", sans-serif; }
 .blue-text-color {
     color: var(--mdc-protected-button-label-text-color);
 }
- 
-.test {
-    background-color: black;
+
+
+/* Pour fix border sur les mat-form-outlined avec labels */
+.mat-mdc-notch-piece {
+    border-right: 1px transparent;
 }
