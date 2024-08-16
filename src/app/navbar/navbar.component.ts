@@ -1,4 +1,4 @@
-import { Component, inject, OnInit } from '@angular/core';
+import { Component, inject } from '@angular/core';
 import { MatDivider } from '@angular/material/divider';
 import { MatToolbar} from '@angular/material/toolbar';
 import { RouterLink } from '@angular/router';
@@ -28,13 +28,8 @@ import { AsyncPipe } from '@angular/common';
   templateUrl: './navbar.component.html',
   styleUrl: './navbar.component.css'
 })
-export class NavbarComponent implements OnInit {
+export class NavbarComponent {
   private readonly authService = inject(AuthService);
 
-  public isLoggedIn = false;
-
-  ngOnInit(): void {
-    this.authService.isAuthenticated$.subscribe( v => this.isLoggedIn = v);
-  }
-  
+  public isLoggedIn = this.authService.$isLoggedIn;
 }

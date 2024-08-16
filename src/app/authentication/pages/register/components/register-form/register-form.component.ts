@@ -105,17 +105,17 @@ export class RegisterFormComponent {
             this.registrationSuccessfulChange.emit(this.registrationSuccessful);
           } else {
             this.errorMessages = res.errors ? res.errors : ['An unexpected error occurred'];
-            this.snackBarService.openSnackBar(this.errorMessages, 2);
+            this.snackBarService.openSnackBar(this.errorMessages, 3);
           }
+          this.isLoading = false;
         },
         error: (err) => {
           console.log(err);
           this.errorMessages = ['An unexpected error occurred'];
-          this.snackBarService.openSnackBar(this.errorMessages, 2);
+          this.snackBarService.openSnackBar(this.errorMessages, 3);
+          this.isLoading = false;
         }
       });
     }
-
-    this.isLoading = false;
   }
 }

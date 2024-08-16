@@ -1,22 +1,24 @@
 import { HttpClient, HttpErrorResponse, HttpResponse } from '@angular/common/http';
 import { inject, Injectable } from '@angular/core';
-import { BehaviorSubject, catchError, map, Observable, of } from 'rxjs';
+import { BehaviorSubject, catchError, firstValueFrom, map, Observable, of } from 'rxjs';
 import { AccessTokenKey, RefreshTokenKey } from '../consts/auth-const';
 import { LoginRequest, RegisterRequest, ConfirmEmailRequest, RefreshRequest } from '../interfaces/auth-request';
 import { LoginResponse, RegisterResponse, ConfirmEmailResponse, RefreshResponse, Response } from '../interfaces/auth-response';
+import { Router } from '@angular/router';
 
 @Injectable({
   providedIn: 'root'
 })
 export class AuthService {
   private readonly http = inject(HttpClient);
+  private readonly router = inject(Router);
   private readonly authUrl = "https://localhost:7195/Auth";
 
   private readonly accessTokenKey = AccessTokenKey;
   private readonly refreshTokenKey = RefreshTokenKey;
 
-  private authSubject = new BehaviorSubject<boolean>(false);
-  public isAuthenticated$ = this.authSubject.asObservable();
+  private isLoggedIn = new BehaviorSubject<boolean>(false);
+  public $isLoggedIn = this.isLoggedIn.asObservable();
 
   /** Requete pour se connecter, si la connexion a fonctionné return true sinon return false et les erreurs */
   public login(loginRequest: LoginRequest): Observable<Partial<Response>> {
@@ -26,7 +28,7 @@ export class AuthService {
           this.setAccessToken(res.body.accessToken);
           this.setRefreshToken(res.body.refreshToken);
           // this.isLoggedIn.set(true);
-          this.authSubject.next(true);
+          this.isLoggedIn.next(true);
           return { isSuccess: true };
         } else {
           // this.isLoggedIn.set(false);
@@ -65,8 +67,7 @@ export class AuthService {
   public logout() {
     localStorage.removeItem(AccessTokenKey);
     localStorage.removeItem(RefreshTokenKey);
-    // this.isLoggedIn.set(false);
-    this.authSubject.next(false);
+    this.isLoggedIn.next(false);
   }
 
   /** Refresh les tokens avec le refreshtoken */
@@ -114,24 +115,51 @@ export class AuthService {
     localStorage.setItem(this.refreshTokenKey, refreshToken);
   }
 
-  /** Tente de récupérer le refreshToken, tente de refresh(), si succes set isAuthenticated to true */ 
-  public loadUser(): void {
+  /** fonction du auth guard */ 
+  public async checkingForAuth(): Promise<boolean> {
     const refreshToken = this.getRefreshToken();
     const accessToken = this.getAccessToken();
-    
-    if (!refreshToken || !accessToken) {
-      this.logout();
-      console.log("pas de refreshtoken ou de accesstoken");
+
+    if (this.isLoggedIn.getValue() === true && accessToken && refreshToken) {
+      return true;
+    } else if (refreshToken && accessToken) {
+      const res = await firstValueFrom(this.refresh({refreshToken}));
+      if (res) {
+        this.isLoggedIn.next(true);
+        return true;
+      } else {
+        this.logout();
+        this.router.navigateByUrl("/login");
+        return false;
+      }
     } else {
-      this.refresh({refreshToken}).subscribe( res => {
-        if (res) {
-          this.authSubject.next(true);
-          console.log("refresh fonctionne");
-        } else {
-          this.logout();
-          console.log("refresh probleme");
-        }
-      })
+      this.logout();
+      this.router.navigateByUrl("/login");
+      return false;
+    }
+  }
+
+  /** Fonction du loggedIn guard */
+  public async checkingForNotAuth(): Promise<boolean> {
+    const refreshToken = this.getRefreshToken();
+    const accessToken = this.getAccessToken();
+
+    if (this.isLoggedIn.getValue() === true && accessToken && refreshToken) {
+      this.router.navigateByUrl("/home");
+      return false;
+    } else if (refreshToken && accessToken) {
+      const res = await firstValueFrom(this.refresh({refreshToken}));
+      if (res) {
+        this.isLoggedIn.next(true);
+        this.router.navigateByUrl("/home");
+        return false;
+      } else {
+        this.logout();
+        return true;
+      }
+    } else {
+      this.logout();
+      return true;
     }
   }
 }

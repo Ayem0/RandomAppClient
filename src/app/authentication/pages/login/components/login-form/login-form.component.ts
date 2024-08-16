@@ -77,18 +77,22 @@ export class LoginFormComponent {
         next: (res) => {
           if (res.isSuccess && res.isSuccess === true) {
             this.router.navigateByUrl("/home");
+            this.isLoading = false;
           } else {
+            if (res.errors?.includes('Account is not confirmed')) {
+              console.log("TODO");
+            }
             this.errorMessages = res.errors ? res.errors : ['An unexpected error occurred'];
-            this.snackBarService.openSnackBar(this.errorMessages, 2);
+            this.snackBarService.openSnackBar(this.errorMessages, 3);
+            this.isLoading = false;
           }
         },
         error: () => {
           this.errorMessages = ['An unexpected error occurred'];
-          this.snackBarService.openSnackBar(this.errorMessages, 2);
+          this.snackBarService.openSnackBar(this.errorMessages, 3);
+          this.isLoading = false;
         }
       });
     }
-
-    this.isLoading = false;
   }
 }
