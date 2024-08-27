@@ -1,2 +1,45 @@
 <div class="flex min-h-screen items-center justify-center">
+    @if (isLoading) {
+        <div class="flex justify-center items-center">
+            <mat-spinner></mat-spinner>
+        </div>
+    } @else if (resentEmail) {
+        @if (resendConfirmEmailSuccessful) {
+            <div class="flex justify-center items-center flex-col">
+                <h1>A confirmation link has been send to your email.</h1>
+                <button mat-raised-button [routerLink]="['/login']">Login</button>
+            </div>
+        } @else {
+            @for (message of resendEmailErrorMessages; track $index) {
+                <h1>{{ message }}</h1>
+            }
+            <!-- TODO a changer pour on click resend confirmation email -->
+            <button mat-raised-button [disabled]="resendingEmail" (click)="resendEmail()">
+                @if (resendingEmail) {
+                    <mat-spinner></mat-spinner>
+                } @else {
+                    Submit
+                }
+            </button>
+        }
+    } @else if (confirmEmailSuccessful) {
+        <div class="flex justify-center items-center flex-col">
+            <h1>Account confirmation succeded.</h1>
+            <button mat-raised-button [routerLink]="['/login']">Login</button>
+        </div>
+    } @else {
+        <div class="flex justify-center items-center flex-col">
+            @for (message of confirmEmailErrorMessages; track $index) {
+                <h1>{{ message }}</h1>
+            }
+            <!-- TODO a changer pour on click resend confirmation email que si l'erreur est que le token est expiré -->
+            <button mat-raised-button [disabled]="resendingEmail" (click)="resendEmail()">
+                @if (resendingEmail) {
+                    <mat-spinner></mat-spinner>
+                } @else {
+                    Resend confirmation email
+                }
+            </button>
+        </div>
+    }
 </div>

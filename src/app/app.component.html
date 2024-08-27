@@ -1,5 +1,40 @@
 
 
-<app-navbar></app-navbar>
-<router-outlet />
+<mat-drawer-container [hasBackdrop]="true" class="!h-screen" style="background-color: var(--mat-app-background) !important;">
+    <mat-drawer #rightSidenav mode="over" position="end">
+        <app-right-sidenav></app-right-sidenav>
+    </mat-drawer>
+
+    <mat-drawer-content class="!flex flex-col size-full" >
+        <app-navbar></app-navbar>
+        <mat-drawer-container [hasBackdrop]="false" class="!h-screen !flex !flex-row" style="background-color: var(--mat-app-background) !important;">
+
+            <mat-drawer #leftSidenav mode="push" class="!w-40">
+                <app-left-sidenav></app-left-sidenav>
+            </mat-drawer>
+
+            <mat-drawer-content class="!flex flex-col size-full !mr-0">
+
+                <router-outlet></router-outlet>
+            </mat-drawer-content>
+
+        </mat-drawer-container>
+    </mat-drawer-content>
+</mat-drawer-container>
+
+
+    
+
+
+
+
+
+
+
+
+
+        
+
+
+
 

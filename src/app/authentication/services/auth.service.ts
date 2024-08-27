@@ -1,9 +1,9 @@
-import { HttpClient, HttpErrorResponse, HttpResponse } from '@angular/common/http';
+import { HttpClient, HttpErrorResponse, HttpParams, HttpResponse } from '@angular/common/http';
 import { inject, Injectable } from '@angular/core';
 import { BehaviorSubject, catchError, firstValueFrom, map, Observable, of } from 'rxjs';
-import { AccessTokenKey, RefreshTokenKey } from '../consts/auth-const';
-import { LoginRequest, RegisterRequest, ConfirmEmailRequest, RefreshRequest } from '../interfaces/auth-request';
-import { LoginResponse, RegisterResponse, ConfirmEmailResponse, RefreshResponse, Response } from '../interfaces/auth-response';
+import { AccessTokenKey, RefreshTokenKey } from '../models/auth-const';
+import { LoginRequest, RegisterRequest, ConfirmEmailRequest, RefreshRequest, ForgotPasswordRequest, ResetPasswordRequest, ResendConfirmEmailRequest } from '../models/auth-request-interface';
+import { LoginResponse, RegisterResponse, ConfirmEmailResponse, RefreshResponse, Response, ForgotPasswordResponse, ResetPasswordResponse, ResendConfirmEmailResponse } from '../models/auth-response-interface';
 import { Router } from '@angular/router';
 
 @Injectable({
@@ -12,6 +12,7 @@ import { Router } from '@angular/router';
 export class AuthService {
   private readonly http = inject(HttpClient);
   private readonly router = inject(Router);
+  // TODO a mettre dans environement
   private readonly authUrl = "https://localhost:7195/Auth";
 
   private readonly accessTokenKey = AccessTokenKey;
@@ -58,9 +59,20 @@ export class AuthService {
     );
   }
 
-  // TODO A changer
-  public resendConfirmEmail(confirmEmailRequest: ConfirmEmailRequest) {
-    return this.http.post<ConfirmEmailResponse>(`${this.authUrl}/ResendConfirmEmail`, confirmEmailRequest, {observe: "response"});
+  /** TODO mettre un blase */
+  public resendConfirmEmail(resendConfirmEmailRequest: ResendConfirmEmailRequest): Observable<Partial<ResendConfirmEmailResponse>> {
+    return this.http.post<ResendConfirmEmailResponse>(`${this.authUrl}/ResendConfirmEmail`, resendConfirmEmailRequest, {observe: "response"}).pipe(
+      map((res: HttpResponse<Partial<ResendConfirmEmailResponse>>) => {
+        if ( res.status === 200 ) {
+          return { isSuccess: true };
+        } else {
+          return { isSuccess: false, errors: res.body && res.body.errors ? res.body.errors : ['Unknown error occurred'] };
+        }
+      }),
+      catchError((err: HttpErrorResponse) => {
+        return of({ isSuccess: false, errors: err.error.errors ? err.error.errors : ['Unknown error occurred']});
+      })
+    );
   }
 
   /** Remove access et refresh tokens du localstorage, met isLoggedIn a false */
@@ -88,11 +100,6 @@ export class AuthService {
     );
   }
 
-  //  TODO - Tente de confirmer l'email
-  public confirmEmail() {
-    return;
-  }
-
   /** Tente de récupérer l'accessToken du localStorage */
   private getAccessToken(): string | null {
     const accessToken = localStorage.getItem(this.accessTokenKey);
@@ -115,7 +122,7 @@ export class AuthService {
     localStorage.setItem(this.refreshTokenKey, refreshToken);
   }
 
-  /** fonction du auth guard */ 
+  /** Redirige les utilisateurs non connectés vers la login page */ 
   public async checkingForAuth(): Promise<boolean> {
     const refreshToken = this.getRefreshToken();
     const accessToken = this.getAccessToken();
@@ -139,7 +146,7 @@ export class AuthService {
     }
   }
 
-  /** Fonction du loggedIn guard */
+  /** Redirige les utilisateurs connectés vers la home page */
   public async checkingForNotAuth(): Promise<boolean> {
     const refreshToken = this.getRefreshToken();
     const accessToken = this.getAccessToken();
@@ -161,6 +168,64 @@ export class AuthService {
       this.logout();
       return true;
     }
+  }
+
+  /** TODO mettre un nom */
+  public forgotPassword(forgotPasswordRequest: ForgotPasswordRequest): Observable<Partial<ForgotPasswordResponse>> {
+    return this.http.post<ForgotPasswordResponse>(`${this.authUrl}/ForgotPassword`, forgotPasswordRequest, {observe: "response"}).pipe(
+      map((res: HttpResponse<Partial<ForgotPasswordResponse>>) => {
+        if ( res.status === 200 ) {
+          return { isSuccess: true };
+        } else {
+          return { isSuccess: false, errors: res.body && res.body.errors ? res.body.errors : ['Unknown error occurred'] };
+        }
+      }),
+      catchError((err: HttpErrorResponse) => {
+        return of({ isSuccess: false, errors: err.error.errors ? err.error.errors : ['Unknown error occurred']});
+      })
+    );
+  }
+
+  /** TODO mettre un nom */
+  public resetPassword(resetPasswordRequest: ResetPasswordRequest): Observable<Partial<ResetPasswordResponse>> {
+    const params = new HttpParams()
+    .set('email', resetPasswordRequest.email)
+    .set('token', resetPasswordRequest.token)
+    .set('password', resetPasswordRequest.password)
+    .set('confirmPassword', resetPasswordRequest.confirmPassword);
+
+    return this.http.get<Response>(`${this.authUrl}/ResetPassword`, { params: params, observe: "response" }).pipe(
+      map((res: HttpResponse<Partial<ResetPasswordResponse>> ) => {
+        if (res.status === 200) {
+          return { isSuccess: true };
+        } else {
+          return { isSuccess: false, errors: res.body && res.body.errors ? res.body.errors : ['Unknown error occurred'] };
+        }
+      }),
+      catchError((err: HttpErrorResponse) => {
+        return of({ isSuccess: false, errors: err.error.errors ? err.error.errors : ['Unknown error occurred'] });
+      })
+    );
+  }
+
+  /** TODO mettre un nom */
+  public confirmEmail(confirmEmailRequest: ConfirmEmailRequest): Observable<Partial<ConfirmEmailResponse>> {
+    const params = new HttpParams()
+    .set('email', confirmEmailRequest.email)
+    .set('token', confirmEmailRequest.token)
+
+    return this.http.get<Response>(`${this.authUrl}/ConfirmEmail`, { params: params, observe: "response" }).pipe(
+      map((res: HttpResponse<Partial<ConfirmEmailResponse>> ) => {
+        if (res.status === 200) {
+          return { isSuccess: true };
+        } else {
+          return { isSuccess: false, errors: res.body && res.body.errors ? res.body.errors : ['Unknown error occurred'] };
+        }
+      }),
+      catchError((err: HttpErrorResponse) => {
+        return of({ isSuccess: false, errors: err.error.errors ? err.error.errors : ['Unknown error occurred'] });
+      })
+    );
   }
 }
 

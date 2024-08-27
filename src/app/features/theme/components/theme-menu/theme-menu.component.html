@@ -1,0 +1,9 @@
+<button mat-menu-item class="dark:!text-white" [matMenuTriggerFor]="theme"><mat-icon class="dark:!text-white">contrast</mat-icon>Theme</button>
+<mat-menu #theme="matMenu" yPosition="below">
+    <button mat-menu-item (click)="onClick(dark)">
+        <mat-icon class="dark:!text-white">nightlight</mat-icon>Dark
+    </button>
+    <button mat-menu-item (click)="onClick(light)">
+        <mat-icon class="dark:!text-white">light_mode</mat-icon>Light
+    </button> 
+</mat-menu>

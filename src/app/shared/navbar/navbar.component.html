@@ -1,0 +1,27 @@
+<div class="flex w-full">
+    <mat-toolbar class="xl:!px-8 dark:!border-b border-b-slate-600">
+        <!-- NavigationMenu -->
+        <button mat-icon-button (click)="openNavigation()" matTooltip="Navigation">
+            <mat-icon class="dark:!text-white" matBadge="1" matBadgeSize="large" aria-hidden="false">menu</mat-icon>
+        </button>
+        <!-- TODO a remplacer par img -->
+        <a [routerLink]="['/home']" class="hidden sm:inline"><h1 class="p-4 dark:!text-white">RandomApp</h1></a>
+        <!-- spacer -->
+        <div class="flex-1"></div>
+        <!-- SettingsMenu -->
+        <app-settings-menu></app-settings-menu>
+        @if (isLoggedIn | async) {
+            <!-- MessageMenu -->
+            <!-- <app-message-menu></app-message-menu> -->
+            <!-- <app-message-sidenav></app-message-sidenav> -->
+            <button mat-icon-button (click)="openMessage()" matTooltip="Messages">
+                <mat-icon class="dark:!text-white" matBadge="1" matBadgeSize="large" aria-hidden="false">forum</mat-icon>
+            </button>
+            <!-- NotificationMenu -->
+            <app-notification-menu></app-notification-menu>
+            <!-- AccountMenu -->
+            <app-account-menu></app-account-menu>
+        }
+    </mat-toolbar>
+    <mat-divider></mat-divider>
+</div>

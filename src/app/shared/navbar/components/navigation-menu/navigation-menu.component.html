@@ -1,0 +1,21 @@
+
+<mat-list>
+
+    <mat-list-item>
+        <a [routerLink]="['/home']"><button class="dark:!text-white" mat-menu-item><mat-icon class="dark:!text-white">home</mat-icon>Home</button></a>
+    </mat-list-item>
+    <mat-list-item>
+        <a [routerLink]="['/home']"><button class="dark:!text-white" mat-menu-item><mat-icon class="dark:!text-white">home</mat-icon>Home</button></a>
+    </mat-list-item>
+    <mat-list-item>
+        <a [routerLink]="['/home']"><button class="dark:!text-white" mat-menu-item><mat-icon class="dark:!text-white">home</mat-icon>Home</button></a>
+    </mat-list-item>
+    <mat-list-item>
+        <a [routerLink]="['/home']"><button class="dark:!text-white" mat-menu-item><mat-icon class="dark:!text-white">home</mat-icon>Home</button></a>
+    </mat-list-item>
+
+    @if((isLoggedIn | async) === false) {
+        <a [routerLink]="['/login']"><button mat-menu-item class="dark:!text-white"><mat-icon class="dark:!text-white">login</mat-icon>Login</button></a>
+        <a [routerLink]="['/register']"><button mat-menu-item class="dark:!text-white"><mat-icon class="dark:!text-white">person_add</mat-icon>Register</button></a>
+    }
+</mat-list>

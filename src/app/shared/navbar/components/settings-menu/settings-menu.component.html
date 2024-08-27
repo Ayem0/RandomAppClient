@@ -1,0 +1,5 @@
+<button mat-icon-button [matMenuTriggerFor]="settings"><mat-icon class="dark:!text-white">more_vert</mat-icon></button>
+<mat-menu #settings="matMenu"  xPosition="before">
+    <button mat-menu-item class="dark:!text-white"><mat-icon class="dark:!text-white">settings</mat-icon>Settings</button>
+    <app-theme-menu></app-theme-menu>
+</mat-menu>

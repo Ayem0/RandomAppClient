@@ -1,0 +1,96 @@
+
+        <h1 class="pt-1 pb-3 text-lg text-center border-b dark:border-b-gray-600 dark:shadow-xl">Messages</h1>
+
+        <div class="row m-2">
+            <mat-form-field appearance="outline" class="w-full">
+                <input matInput placeholder="Find by name" type="text" [formControl]="search">
+                <mat-icon matSuffix>search</mat-icon>
+            </mat-form-field>
+        </div>
+
+
+        <mat-tab-group mat-stretch-tabs="false" mat-align-tabs="center">
+            <mat-tab>
+                <ng-template matTabLabel>
+                    <span class="flex items-center" matBadge="3" matBadgeSize="large" matBadgeOverlap="false">All</span>
+                </ng-template>
+                <div class="flex-col h-60 overflow-x-hidden snap-y"
+                    style="scrollbar-width: thin; scrollbar-color: #c4c6d0 var(--mat-menu-container-color);">
+                    @for (item of ['items', 'test', 'other', 'items', 'test', 'other', 'items', 'test', 'other']; track
+                    $index) {
+
+                    <div class="flex justify-between items-center py-3 pl-3 pr-1 dark:hover:bg-zinc-700 snap-start">
+                        <div class="flex items-center gap-1">
+                            <mat-icon>account_circle</mat-icon>
+                            <div class="flex-col justify-center">
+                                <h1>{{ item }}</h1>
+                                <span>{{ item }}</span>
+                            </div>
+                        </div>
+                        <div>
+                            <button mat-icon-button>
+                                <mat-icon>chevron_right</mat-icon>
+                            </button>
+
+                        </div>
+                    </div>
+                    }
+                </div>
+            </mat-tab>
+            <mat-tab>
+                <ng-template matTabLabel>
+                    <span class="flex items-center" matBadge="3" matBadgeSize="large"
+                        matBadgeOverlap="false">Private</span>
+                </ng-template>
+                <div class="flex-col h-60 overflow-x-hidden snap-y"
+                    style="scrollbar-width: thin; scrollbar-color: #c4c6d0 var(--mat-menu-container-color);">
+                    @for (item of ['items', 'test', 'other', 'items', 'test', 'other', 'items', 'test', 'other']; track
+                    $index) {
+
+                    <div class="flex justify-between items-center py-3 pl-3 pr-1 dark:hover:bg-zinc-700 snap-start">
+                        <div class="flex items-center gap-1">
+                            <mat-icon>account_circle</mat-icon>
+                            <div class="flex-col justify-center">
+                                <h1>{{ item }}</h1>
+                                <span>{{ item }}</span>
+                            </div>
+                        </div>
+                        <div>
+                            <button mat-icon-button>
+                                <mat-icon>chevron_right</mat-icon>
+                            </button>
+
+                        </div>
+                    </div>
+                    }
+                </div>
+            </mat-tab>
+            <mat-tab>
+                <ng-template matTabLabel>
+                    <span class="flex items-center" matBadge="3" matBadgeSize="large"
+                        matBadgeOverlap="false">Group</span>
+                </ng-template>
+                <div class="flex-col h-60 overflow-x-hidden snap-y"
+                    style="scrollbar-width: thin; scrollbar-color: #c4c6d0 var(--mat-menu-container-color);">
+                    @for (item of ['items', 'test', 'other', 'items', 'test', 'other', 'items', 'test', 'other']; track
+                    $index) {
+
+                    <div class="flex justify-between items-center py-3 pl-3 pr-1 dark:hover:bg-zinc-700 snap-start">
+                        <div class="flex items-center gap-1">
+                            <mat-icon>account_circle</mat-icon>
+                            <div class="flex-col justify-center">
+                                <h1>{{ item }}</h1>
+                                <span>{{ item }}</span>
+                            </div>
+                        </div>
+                        <div>
+                            <button mat-icon-button>
+                                <mat-icon>chevron_right</mat-icon>
+                            </button>
+
+                        </div>
+                    </div>
+                    }
+                </div>
+            </mat-tab>
+        </mat-tab-group>
